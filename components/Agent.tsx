@@ -71,7 +71,7 @@ const Agent = ({userName} :AgentProps) => {
                         {callStatus === "INACTIVE" || callStatus === "FINISHED"? "Call": ". . ."}
                     </span>
                 </button>
-            ): (
+            ) : (
                 <button className='btn-disconnect'>
                     END
                 </button>
