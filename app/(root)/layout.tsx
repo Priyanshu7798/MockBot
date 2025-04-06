@@ -14,7 +14,7 @@ export default async function RootLayout({children}:{children:ReactNode}){
         <>
             <div className="root-layout">
                 <nav>
-                    <Link href="/" className="flex items-center gap-2 ">
+                    <Link href="/" className="flex items-center gap-2 mb-5 ">
                         <Image 
                             src='logo.svg' alt="logo" width={38} height={32}
                         />
