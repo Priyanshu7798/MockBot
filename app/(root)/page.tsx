@@ -2,10 +2,29 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import Image from "next/image"
 import React from 'react'
-import { dummyInterviews } from '@/constants'
 import InterviewCard from '@/components/InterviewCard'
+import { getCurrentUser, getInterviewByUserId, getLatestInterview } from '@/lib/actions/auth.action'
 
-export default function Page() {
+export default async function Page() {
+
+  const user = await getCurrentUser();
+
+  // optimize way
+  const [userInterviews,latestInterviews] = await Promise.all([
+      await getInterviewByUserId(user?.id!),
+      await getLatestInterview({userId : user?.id!})
+  ])
+
+
+  // not optimized %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  // const userInterviews = await getInterviewByUserId(user?.id!)
+  // const latestInterviews = await getLatestInterview({userId : user?.id!})
+  
+  
+  const hasPastIntervies = userInterviews?.length! > 0 ;
+  const hasUpcomingInterviews = latestInterviews?.length! >0
+
   return(
     <>
       <section className='card-cta mt-5'>
@@ -28,9 +47,13 @@ export default function Page() {
         <h2>Your Inteviews</h2>
 
         <div className='interviews-section'>
-          {dummyInterviews.map((interview)=>(
-            <InterviewCard {...interview} key={interview.id}/>
-          ))}
+          { hasPastIntervies ? (
+            userInterviews?.map((interview)=>(
+              <InterviewCard {...interview} key={interview.id}/>
+            ))
+          ):(
+              <p>You haven&apos;t taken the interview yet</p>
+          )}
         </div>
       </section>
 
@@ -38,11 +61,13 @@ export default function Page() {
         <h2>Take an Interview</h2>
 
         <div className='interviews-section'>
-          {dummyInterviews.map((interview)=>(
+        { hasUpcomingInterviews ? (
+            latestInterviews?.map((interview)=>(
               <InterviewCard {...interview} key={interview.id}/>
-          ))}
-
-          {/* <p>you havent taken any interview</p> */}
+            ))
+          ):(
+              <p> Ther is no Interview available</p>
+          )}\
         </div>
       </section>
     </>
