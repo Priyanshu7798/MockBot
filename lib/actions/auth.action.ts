@@ -4,6 +4,8 @@
 import { auth, db } from "@/firebase/admin";
 import { Decipher } from "crypto";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 
 const ONE_WEEK = 60 * 60 * 24 * 7
 
@@ -131,11 +133,17 @@ export async function isAuthenticated() {
 // get interview questions by user id from firebase
 export async function getInterviewByUserId(userid:string) : Promise<Interview[] | null >{
 
+  if(!userid){
+    return null;  // Or return [] based on your UI handling
+  }
+
   const interviewQuestion = await db
     .collection('interviews')
     .where("userId", '==', userid)
     .orderBy('createdAt', 'desc')
     .get();
+
+  if(interviewQuestion.empty) return [];
 
   return interviewQuestion.docs.map((doc)=>({
     id: doc.id,
@@ -159,4 +167,23 @@ export async function getLatestInterview(params: GetLatestInterviewsParams) : Pr
     id: doc.id,
     ...doc.data(),
   })) as Interview[]
+}
+
+export async function signOut() {
+  try {
+    const cookieStore = await cookies();
+
+    // set the token to empty
+    cookieStore.set('session','',{
+      maxAge: 0,
+      path: '/'
+    })
+
+    redirect('/signin');
+
+    return new Response('Logged Out', { status: 200 })
+  } catch (error) {
+    console.log(error);
+    
+  }
 }

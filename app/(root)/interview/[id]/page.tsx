@@ -18,7 +18,7 @@ export default async function Page({params} : RouteParams){
 
     return (
         <>
-            <div className="flex flex-row gap-4 justify-between">
+            <div className="flex flex-row gap-4 justify-between mb-5">
                 <div className="flex flex-row gap-4 items-center max-sm:flex-col">
                     <div className="flex flex-row gap-4 items-center">
                         <Image src={getRandomInterviewCover()} alt="cover-image" width={40} height={40} className="rounded-full object-cover size-[40px]" />
@@ -32,7 +32,7 @@ export default async function Page({params} : RouteParams){
             </div>
 
             <Agent 
-                userName={ user?.name } 
+                userName={ user?.name || '' } 
                 userId={user?.id} 
                 interviewId={id} 
                 type='interview'

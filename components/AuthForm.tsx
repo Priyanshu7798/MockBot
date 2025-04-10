@@ -8,7 +8,6 @@ import Link from "next/link"
 import {
   Form,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { NextResponse } from "next/server"
 import { toast } from "sonner"
@@ -43,9 +42,7 @@ const AuthForm = ({type}:{type:FormType}) => {
     
     // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    
 
         try {
         
